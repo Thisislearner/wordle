@@ -1,5 +1,5 @@
 import random
-import prettytable
+from prettytable import PrettyTable
 
 # alphabets list.
 ALPHABETS : dict = {
@@ -84,7 +84,7 @@ for i_d in PLAYERS.keys():
     print("\n")
     print("========================================================================")
     print(f"-- {PLAYERS[i_d]['name']} ID {i_d} -------------------------------")
-    print(f"-- Enter a {word_size} letter word starting with {starting_letter}")
+    print(f"-- Enter a {word_size} letter word starting with '{starting_letter.upper()}'")
     # giving three attempts
     entered_word : str = ""
     for i in range(3):
@@ -95,7 +95,29 @@ for i_d in PLAYERS.keys():
     #storing player entry
     PLAYERS[i_d]["word"] = entered_word
     # giving scores to player based on entry.
+    current_plr_scr : int = -1
     if valid_entry(entered_word, starting_letter, word_size):
-           PLAYERS[i_d]["points"] = score_calc(entered_word)
-    else:
-        PLAYERS[i_d]["points"] = -1
+           current_plr_scr = score_calc(entered_word)
+    PLAYERS[i_d]["points"] = current_plr_scr
+
+# printing players entry and point
+display_table = PrettyTable(["ID", "NAME", "WORD ENTERED", "POINTS", "WINNER"])
+
+# highest score calculation
+highest_score : int = 0
+for i in PLAYERS_ID:
+    if PLAYERS[i]["points"] > highest_score:
+        highest_score = PLAYERS[i]["points"]
+
+# loop to print
+for i_d in PLAYERS_ID:
+    # checking for winner.
+    winner : str = "------"
+    if PLAYERS[i_d]["points"] == highest_score:
+        PLAYERS[i_d]["winner"] = True
+        winner = "WINNER"
+    display_table.add_row([i_d, PLAYERS[i_d]["name"], PLAYERS[i_d]["word"], PLAYERS[i_d]["points"], winner])
+
+print(display_table)
+
+# new loop to display rank
