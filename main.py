@@ -1,4 +1,5 @@
 import random
+import prettytable
 
 # alphabets list.
 ALPHABETS : dict = {
@@ -18,6 +19,14 @@ def valid_entry(player_entry : str, first_chr : str, wrd_len : int) -> bool :
     if not player_entry.isalpha() or player_entry[0] != first_chr or len(player_entry) != wrd_len:
         return False
     return True
+
+
+def score_calc(wrd_entry : str) -> int:
+    """calculates total score"""
+    total_score : int = 0 # var hold total score.
+    for c in wrd_entry:
+        total_score += ALPHABETS[c]
+    return total_score
 
 
 # WELCOME SCREEN.
@@ -71,15 +80,22 @@ for i in range(total_players):
 
 
 # taking input from player.
-for id in PLAYERS.keys():
+for i_d in PLAYERS.keys():
     print("\n")
     print("========================================================================")
-    print(f"-- {PLAYERS[id]['name']} ID {id} -------------------------------")
+    print(f"-- {PLAYERS[i_d]['name']} ID {i_d} -------------------------------")
     print(f"-- Enter a {word_size} letter word starting with {starting_letter}")
     # giving three attempts
     entered_word : str = ""
     for i in range(3):
-        entered_word = input(f"Attempt ({i + 1} of 3 :> ")
+        entered_word = input(f"Attempt ({i + 1} of 3) :>> ")
         # checking for valid entry
         if valid_entry(entered_word, starting_letter, word_size):
             break
+    #storing player entry
+    PLAYERS[i_d]["word"] = entered_word
+    # giving scores to player based on entry.
+    if valid_entry(entered_word, starting_letter, word_size):
+           PLAYERS[i_d]["points"] = score_calc(entered_word)
+    else:
+        PLAYERS[i_d]["points"] = -1
