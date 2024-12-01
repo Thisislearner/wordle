@@ -1,6 +1,4 @@
 import random
-from multiprocessing.dummy import current_process
-
 from prettytable import PrettyTable
 
 # alphabets list.
@@ -106,7 +104,7 @@ for i_d in PLAYERS.keys():
     PLAYERS_SCORES.append(current_plr_scr)
 
 # printing players entry and point
-display_table = PrettyTable(["ID", "NAME", "WORD ENTERED", "POINTS", "WINNER"])
+display_table = PrettyTable(["ID", "NAME", "WORD ENTERED", "POINTS", "WINNER/LOOSER"])
 
 # highest score calculation
 highest_score : int = 0
@@ -131,3 +129,23 @@ for i in range(len(PLAYERS_SCORES)):
             PLAYERS_SCORES[j] = PLAYERS_SCORES[j + 1]
             PLAYERS_SCORES[j + 1] = current_item
 
+# printing general display
+print(display_table)
+
+# rank display
+id_displayed : list = []  # holds ids already displayed.
+rank : int = 1
+rank_display = PrettyTable(["RANK", "ID", "NAME", "POINTS"])
+
+# loop to print rank
+for i in PLAYERS_SCORES:
+    plr_id : int  = 0 # gets current id match
+    for d in PLAYERS:
+        if PLAYERS[d]["points"] == i:  # when points match found
+            plr_id = d
+            rank_display.add_row([rank, d, PLAYERS[d]['name'], PLAYERS[d]['points']])
+            break
+    PLAYERS.pop(plr_id)
+    rank += 1
+
+print(rank_display)
