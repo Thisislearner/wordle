@@ -1,4 +1,6 @@
 import random
+from multiprocessing.dummy import current_process
+
 from prettytable import PrettyTable
 
 # alphabets list.
@@ -12,6 +14,7 @@ ALPHABETS : dict = {
 # keep all details regarding players.
 PLAYERS : dict = {}
 PLAYERS_ID : list = [] # hold ids' of player.
+PLAYERS_SCORES : list = [] # stores scores of players.
 
 
 def valid_entry(player_entry : str, first_chr : str, wrd_len : int) -> bool :
@@ -99,6 +102,8 @@ for i_d in PLAYERS.keys():
     if valid_entry(entered_word, starting_letter, word_size):
            current_plr_scr = score_calc(entered_word)
     PLAYERS[i_d]["points"] = current_plr_scr
+    # storing scores
+    PLAYERS_SCORES.append(current_plr_scr)
 
 # printing players entry and point
 display_table = PrettyTable(["ID", "NAME", "WORD ENTERED", "POINTS", "WINNER"])
@@ -118,6 +123,11 @@ for i_d in PLAYERS_ID:
         winner = "WINNER"
     display_table.add_row([i_d, PLAYERS[i_d]["name"], PLAYERS[i_d]["word"], PLAYERS[i_d]["points"], winner])
 
-print(display_table)
-
 # new loop to display rank
+for i in range(len(PLAYERS_SCORES)):
+    for j in range(0, (len(PLAYERS_SCORES) - 1) - i):
+        if PLAYERS_SCORES[j] < PLAYERS_SCORES[j + 1]:
+            current_item = PLAYERS_SCORES[j]
+            PLAYERS_SCORES[j] = PLAYERS_SCORES[j + 1]
+            PLAYERS_SCORES[j + 1] = current_item
+
